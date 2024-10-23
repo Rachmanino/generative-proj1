@@ -1,1 +1,1 @@
-# generative-proj1
+# Generative Models Project 1
