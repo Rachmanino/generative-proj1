@@ -3,7 +3,7 @@ import json
 from torch.utils.data import Dataset, DataLoader
 
 class MyTrainDataset(Dataset):
-    """Construct a trainning dataset from data/*.json"""
+    """Construct a trainning dataset from data/train.json"""
 
     def __init__(self):
         super(MyTrainDataset, self).__init__()
