@@ -16,6 +16,6 @@
 
 2. conda配置环境
 '''sh
-
+conda env create -f env.yaml
 '''
 
