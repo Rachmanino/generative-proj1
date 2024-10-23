@@ -4,16 +4,19 @@ from trl import SFTConfig, SFTTrainer
 
 from model import DecoderLM
 from tokenizer import tokenizer
+from mydataset import MyTrainDataset
 import config
 
-
-dataset = NotImplemented #TODO: prepare the dataset
+#TODO: prepare the dataset
+dataset = MyTrainDataset()
 
 model = DecoderLM(
     n_vocab=config.n_vocab,
-    embedding_dim=config.n_embd,
-    n_layer=config.n_layer,
-    n_head=config.n_head,
+    embedding_dim=config.embedding_dim,
+    hidden_dim=config.hidden_dim,
+    max_seq_len=config.max_seq_length,
+    num_layers=config.n_layer,
+    num_heads=config.n_head,
     dropout=config.p,
 )
 
@@ -21,7 +24,6 @@ training_args = SFTConfig( #TODO: check the arguments carefully
     output_dir="output",
     do_train=True,
     do_eval=False,
-    evaluate_during_training=False,
     per_device_train_batch_size=config.batch_size,
     per_device_eval_batch_size=config.batch_size,
     gradient_accumulation_steps=config.gradient_accumulation_steps,
@@ -37,9 +39,10 @@ training_args = SFTConfig( #TODO: check the arguments carefully
 )
 
 trainer = SFTTrainer(
-    model = DecoderLM(),
+    model = model,
+    args = training_args,
     train_dataset = dataset,
-    args = training_args
+    tokenizer=tokenizer,
 )
 trainer.train()
 

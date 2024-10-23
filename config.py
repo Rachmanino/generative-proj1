@@ -1,4 +1,5 @@
 from tokenizer import tokenizer
+import torch
 
 """The config file of the training process."""
 n_epoches = 100
@@ -19,9 +20,13 @@ lr_scheduler_type = "linear"
 n_layer = 2
 n_head = 2
 n_vocab = tokenizer.vocab_size
-n_embd = 256
+embedding_dim = 64
+hidden_dim = 256
 p = 0.1
 n_positions = 512
+
+"""Others"""
+device = "cuda" if torch.cuda.is_available() else "cpu" # 暂时单卡训练
 
 
 
