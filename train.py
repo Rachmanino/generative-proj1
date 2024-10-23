@@ -1,6 +1,7 @@
 import torch
 from datasets import load_dataset
 from trl import SFTConfig, SFTTrainer
+from transformers import BertTokenizer, DataCollatorForLanguageModeling
 
 from model import DecoderLM
 from tokenizer import tokenizer
@@ -8,7 +9,7 @@ from mydataset import MyTrainDataset
 import config
 
 #TODO: prepare the dataset
-dataset = MyTrainDataset()
+dataset = load_dataset('text', data_files='data/train.json')
 
 model = DecoderLM(
     n_vocab=config.n_vocab,
@@ -42,10 +43,6 @@ trainer = SFTTrainer(
     model = model,
     args = training_args,
     train_dataset = dataset,
-    tokenizer=tokenizer,
+    tokenizer=tokenizer
 )
 trainer.train()
-
-
-
-

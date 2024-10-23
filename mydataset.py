@@ -1,6 +1,7 @@
 import torch
 import json
 from torch.utils.data import Dataset, DataLoader
+from tokenizer import tokenizer
 
 class MyTrainDataset(Dataset):
     """Construct a trainning dataset from data/train.json"""
@@ -11,7 +12,7 @@ class MyTrainDataset(Dataset):
         with open(self.path) as f:
             self._data = json.load(f) # [{'text': '...',}, ...]
             self.data = [d['text'] for d in self._data] # ['...', ...]
-        
+
 
     def __getitem__(self, index):
         return self.data[index]
