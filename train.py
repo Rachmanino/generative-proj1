@@ -1,2 +1,48 @@
-import datasets
-from 
+import torch
+from datasets import load_dataset
+from trl import SFTConfig, SFTTrainer
+
+from model import DecoderLM
+from tokenizer import tokenizer
+import config
+
+
+dataset = NotImplemented #TODO: prepare the dataset
+
+model = DecoderLM(
+    n_vocab=config.n_vocab,
+    embedding_dim=config.n_embd,
+    n_layer=config.n_layer,
+    n_head=config.n_head,
+    dropout=config.p,
+)
+
+training_args = SFTConfig( #TODO: check the arguments carefully
+    output_dir="output",
+    do_train=True,
+    do_eval=False,
+    evaluate_during_training=False,
+    per_device_train_batch_size=config.batch_size,
+    per_device_eval_batch_size=config.batch_size,
+    gradient_accumulation_steps=config.gradient_accumulation_steps,
+    max_seq_length=config.max_seq_length,
+    learning_rate=config.lr,
+    weight_decay=config.weight_decay,
+    adam_beta1=config.adam_beta1,
+    adam_beta2=config.adam_beta2,
+    num_train_epochs=config.n_epoches,
+    lr_scheduler_type=config.lr_scheduler_type,
+    warmup_steps=config.warmup_steps,
+    bf16=torch.cuda.is_bf16_supported()
+)
+
+trainer = SFTTrainer(
+    model = DecoderLM(),
+    train_dataset = dataset,
+    args = training_args
+)
+trainer.train()
+
+
+
+
