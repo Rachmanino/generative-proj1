@@ -7,7 +7,7 @@ import numpy
 from tokenizer  import tokenizer
 
 class DecoderLM(nn.Module):
-    'A decoder-only Transformer model for language modeling'
+    'A decoder-only Transformer model for language modeling. '
 
     def __init__(
         self, 
@@ -29,7 +29,7 @@ class DecoderLM(nn.Module):
                                            num_heads, 
                                            hidden_dim, 
                                            dropout,
-                                           activation=F.gelu)
+                                           activation=F.gelu) # use GeLU activation in GPT-2
             )
         self.fc = nn.Linear(embedding_dim, n_vocab)
     
