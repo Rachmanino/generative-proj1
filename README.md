@@ -12,10 +12,10 @@
 
 ## 环境配置
 1. 将提供的北大网盘中文件夹重命名为data放在项目文件夹下
-![alt text](imgs/image.png)
+[alt text](imgs/image.png)
 
 2. conda配置环境
-'''sh
+```sh
 conda env create -f env.yaml
-'''
+```
 
