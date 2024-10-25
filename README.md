@@ -16,6 +16,11 @@
 conda env create -f env.yaml
 ```
 
+- 准备数据集
+```sh
+python prepare_data.py
+```
+
 - 训练
   - 在config.py中调整配置
   - 在tokenizer.py中调整tokenizer
