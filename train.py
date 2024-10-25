@@ -8,10 +8,6 @@ from model import DecoderLM
 from tokenizer import tokenizer
 import config
 
-# remove all files in output/
-import os
-for filename in os.listdir("output"):
-    remove = os.path.join("output", filename)
 
 #TODO: prepare the dataset
 dataset = load_from_disk("data/prepared_dataset")
