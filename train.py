@@ -8,6 +8,7 @@ from model import DecoderLM
 from tokenizer import tokenizer
 import config
 
+from utils import *
 
 dataset = load_from_disk("data/prepared_dataset")
 
@@ -58,4 +59,7 @@ trainer = SFTTrainer(
 )
 
 if __name__ == "__main__":
+    print(f'#Parameters: {count_params(model)}')
+    print('Start training...')
+    
     trainer.train()

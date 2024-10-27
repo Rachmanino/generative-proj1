@@ -9,24 +9,7 @@ from tokenizer import tokenizer
 import config
 import os
 
-def load_last_ckpt(model_dir_path: str, 
-                   model: nn.Module, 
-                   device: str):
-    """
-    Load the last checkpoint of the model.
-    Args:
-        model_dir_path: str, the path of the model directory.
-        model: nn.Module, the model to load the checkpoint.
-        device: str, the device to load the model.
-    """
-    ckpt_list = os.listdir(model_dir_path)
-    ckpt_list = [int(ckpt.split('-')[1]) for ckpt in ckpt_list if ckpt.startswith('checkpoint')]
-    if ckpt_list == []:
-        raise FileNotFoundError(f"No checkpoint found in {model_dir_path}!")
-    ckpt_list.sort()
-    last_ckpt = ckpt_list[-1]
-    ckpt_path = os.path.join(model_dir_path, f'checkpoint-{last_ckpt}/model.safetensors')
-    load_model(model, ckpt_path, device=device)
+from utils import *
 
 load_last_ckpt('output', model, config.device)
 prompt ="令狐冲"
