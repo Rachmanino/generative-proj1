@@ -2,11 +2,11 @@ from tokenizer import tokenizer
 import datasets
 from datasets import load_dataset
 
-d = datasets = load_dataset("text", data_files={"train": 'data/train.json', 
-                                                "test": 'data/test.json'})
+
+
 def tokenize_function(examples):
     return tokenizer(examples["text"])
-tokenized_d = d.map(tokenize_function, batched=True, num_proc=4, remove_columns=["text"])
+
 
 block_size = 256
 def group_texts(examples):
@@ -24,16 +24,24 @@ def group_texts(examples):
     result["labels"] = result["input_ids"].copy()
     return result
 
-prepared_dataset = tokenized_d.map(
-    group_texts,
-    batched=True,
-    num_proc=4
-)
-
-print(prepared_dataset)
-prepared_dataset.save_to_disk("data/prepared_dataset")
 
 
+
+if __name__=='__main__':
+    d = datasets = load_dataset("text", data_files={"train": 'data/train.json', 
+                                                "test": 'data/test.json'})
+    print(d['train']['text'])
+    # tokenized_d = d.map(tokenize_function, batched=True, num_proc=4, remove_columns=["text"])
+    
+    # prepared_dataset = tokenized_d.map(
+    #     group_texts,
+    #     batched=True,
+    #     num_proc=4
+    # )
+
+    # print(prepared_dataset)
+    # prepared_dataset.save_to_disk("data/prepared_dataset")
+    # print(tokenizer("我在这里"))
 
 
 

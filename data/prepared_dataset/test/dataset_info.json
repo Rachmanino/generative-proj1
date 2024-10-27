@@ -6,16 +6,16 @@
   "dataset_size": 7828929,
   "description": "",
   "download_checksums": {
-    "/root/proj1/data/train.json": {
-      "num_bytes": 6758142,
+    "D:/homework/\u751f\u6210\u6a21\u578b\u57fa\u7840/generative-proj1/data/train.json": {
+      "num_bytes": 6842764,
       "checksum": null
     },
-    "/root/proj1/data/test.json": {
-      "num_bytes": 787444,
+    "D:/homework/\u751f\u6210\u6a21\u578b\u57fa\u7840/generative-proj1/data/test.json": {
+      "num_bytes": 797267,
       "checksum": null
     }
   },
-  "download_size": 7545586,
+  "download_size": 7640031,
   "features": {
     "input_ids": {
       "feature": {
@@ -48,7 +48,7 @@
   },
   "homepage": "",
   "license": "",
-  "size_in_bytes": 15374515,
+  "size_in_bytes": 15468960,
   "splits": {
     "train": {
       "name": "train",

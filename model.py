@@ -28,9 +28,18 @@ class DecoderLM(nn.Module):
                 dropout=self.p,
                 activation='gelu',
                 batch_first=True,
+                
             ),
             num_layers=self.n_layer,
             norm=nn.LayerNorm(self.embedding_dim)
+        )
+        self.decoderlayer=nn.TransformerDecoderLayer(
+            d_model=self.embedding_dim,
+            nhead=self.n_head,
+            dim_feedforward=self.hidden_dim,
+            dropout=self.p,
+            activation='gelu',
+            batch_first=True,
         )
         self.out_fc = nn.Linear(self.embedding_dim, self.vocab_size)
 
@@ -55,19 +64,25 @@ class DecoderLM(nn.Module):
         if attention_mask is None:
             attention_mask = torch.ones_like(input_ids)
         position_ids = torch.cumsum(torch.ones_like(input_ids), dim=1) - 1
-        attn_mask = torch.triu(torch.ones(input_ids.shape[1], input_ids.shape[1]), diagonal=1).bool().to(config.device)
+        # print(input_ids,labels)
+        attn_mask = torch.triu(torch.ones(input_ids.shape[1], input_ids.shape[1]), diagonal=0).bool().to(config.device)
+        # attn_mask=attn_mask.float().masked_fill(attn_mask==1,float('-inf'))
         padding_mask = (input_ids == 0).bool().to(config.device)
+        attn_mask=nn.Transformer.generate_square_subsequent_mask(input_ids.shape[1],config.device)
         x = self.embedding(input_ids) + self.positional_encoding(position_ids) # (B, S, D)
         x = self.decoder.forward(tgt=x, 
                                  memory=x,  
                                  tgt_mask=attn_mask,
                                  memory_mask=attn_mask,
                                  tgt_key_padding_mask=padding_mask, 
-                                 memory_key_padding_mask=padding_mask,
-                                 tgt_is_causal=True,
-                                 memory_is_causal=True) # (B, S, D)
+                                 memory_key_padding_mask=padding_mask,)
+                                #  tgt_is_causal=True,
+                                #  memory_is_causal=True) # (B, S, D)
         output = self.out_fc(x) # (B, S, V)
         # print(output.shape, labels.shape)
+        labels=labels[:,1:]
+        labels=torch.cat((labels,(4497*torch.ones(labels.shape[0],1).int()).to(config.device)),dim=1)
+
         loss = F.cross_entropy(output.view(-1, self.vocab_size), labels.view(-1), reduction='mean')
         return loss, output
 

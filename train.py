@@ -3,7 +3,7 @@ from torch import nn
 from datasets import Dataset, load_dataset, load_from_disk
 from trl import SFTConfig, SFTTrainer
 from transformers import BertTokenizer, DataCollatorForLanguageModeling, TextDataset
-
+from datasets import Dataset,DatasetDict
 from model import DecoderLM
 from tokenizer import tokenizer
 import config
@@ -40,12 +40,20 @@ training_args = SFTConfig( #TODO: check the arguments carefully
     bf16=torch.cuda.is_bf16_supported(),
     logging_dir = 'logs',
     logging_steps=10,
+    dataset_text_field='text'
 )
 
+train_dataset=Dataset.from_json('data/train.json')
+test_dataset=Dataset.from_json('data/test.json')
+dataset_dict=DatasetDict({
+    'train':train_dataset,
+    'test':test_dataset
+})
+# print(dataset_dict['train'])
 trainer = SFTTrainer(
     model = model.to(config.device),
     args = training_args,
-    train_dataset = dataset['train'],
+    train_dataset = dataset_dict['train'],
     tokenizer = tokenizer
 )
 

@@ -8,7 +8,7 @@ tokenizer = BertTokenizer(vocab_file='data/vocab.txt')
 if __name__ == '__main__':
     # Example Usage
     text = "生成模型基础！"
-    print(tokenizer(text))
+    print(tokenizer(text)['input_ids'].shape())
     # output:
     # {'input_ids': [2, 619, 3323, 1250, 2845, 3267, 1, 2627, 3],
     # 'token_type_ids': [0, 0, 0, 0, 0, 0, 0, 0, 0], 'attention_mask': [1, 1, 1, 1, 1, 1, 1, 1, 1]}
