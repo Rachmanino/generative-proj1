@@ -65,9 +65,8 @@ class DecoderLM(nn.Module):
             attention_mask = torch.ones_like(input_ids)
         position_ids = torch.cumsum(torch.ones_like(input_ids), dim=1) - 1
         # print(input_ids,labels)
-        attn_mask = torch.triu(torch.ones(input_ids.shape[1], input_ids.shape[1]), diagonal=0).bool().to(config.device)
-        # attn_mask=attn_mask.float().masked_fill(attn_mask==1,float('-inf'))
         padding_mask = (input_ids == 0).bool().to(config.device)
+        padding_mask = padding_mask.float().masked_fill(padding_mask, float('-inf'))
         attn_mask=nn.Transformer.generate_square_subsequent_mask(input_ids.shape[1],config.device)
         x = self.embedding(input_ids) + self.positional_encoding(position_ids) # (B, S, D)
         x = self.decoder.forward(tgt=x, 

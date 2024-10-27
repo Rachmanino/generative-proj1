@@ -9,7 +9,6 @@ from tokenizer import tokenizer
 import config
 
 
-#TODO: prepare the dataset
 dataset = load_from_disk("data/prepared_dataset")
 
 model = DecoderLM(
@@ -39,8 +38,9 @@ training_args = SFTConfig( #TODO: check the arguments carefully
     warmup_steps=config.warmup_steps,
     bf16=torch.cuda.is_bf16_supported(),
     logging_dir = 'logs',
-    logging_steps=10,
-    dataset_text_field='text'
+    logging_steps=50, # log to the stdout every x steps
+    dataset_text_field='text',
+    save_steps=5000 # save the model every x steps
 )
 
 train_dataset=Dataset.from_json('data/train.json')
