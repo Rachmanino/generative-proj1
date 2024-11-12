@@ -4,6 +4,8 @@ from datasets import Dataset, load_dataset, load_from_disk
 from trl import SFTConfig, SFTTrainer
 from transformers import BertTokenizer, DataCollatorForLanguageModeling, TextDataset
 from datasets import Dataset,DatasetDict
+from transformers import GPT2Config
+from transformers import GPT2LMHeadModel
 from model import DecoderLM
 from tokenizer import tokenizer
 import config
@@ -12,15 +14,25 @@ from utils import *
 
 dataset = load_from_disk("data/prepared_dataset")
 
-model = DecoderLM(
-    embedding_dim=config.embedding_dim,
-    n_head=config.n_head,
-    n_layer=config.n_layer,
-    hidden_dim=config.hidden_dim,
-    p=config.p,
+# model = DecoderLM(
+#     embedding_dim=config.embedding_dim,
+#     n_head=config.n_head,
+#     n_layer=config.n_layer,
+#     hidden_dim=config.hidden_dim,
+#     p=config.p,
+#     vocab_size=config.vocab_size,
+#     max_seq_length=config.max_seq_length
+# )
+gpt2config_vanilla_ntp=GPT2Config(
     vocab_size=config.vocab_size,
-    max_seq_length=config.max_seq_length
+    n_positions=512,
+    n_embd=512,
+    n_layer=10,
+    n_head=8,
+    bos_token_id=4498,#cls
+    eos_token_id=4497,#sep
 )
+model=GPT2LMHeadModel(gpt2config_vanilla_ntp)
 
 training_args = SFTConfig( #TODO: check the arguments carefully
     output_dir="output",
@@ -55,7 +67,8 @@ trainer = SFTTrainer(
     model = model.to(config.device),
     args = training_args,
     train_dataset = dataset_dict['train'],
-    tokenizer = tokenizer
+    tokenizer = tokenizer,
+    preprocess_logits_for_metrics=nn.CrossEntropyLoss()
 )
 
 if __name__ == "__main__":

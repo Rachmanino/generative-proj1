@@ -61,6 +61,9 @@ class DecoderLM(nn.Module):
             output: torch.Tensor, shape (batch_size, seq_length, vocab_size)
         """
         assert input_ids.shape[1] <= self.max_seq_length, f"input_ids.shape[1] should be less than or equal to {self.max_seq_length}"
+        input_ids=input_ids[:,:-1].contiguous()
+        labels=labels[:,1:].contiguous()
+
         if attention_mask is None:
             attention_mask = torch.ones_like(input_ids)
         position_ids = torch.cumsum(torch.ones_like(input_ids), dim=1) - 1
@@ -79,8 +82,8 @@ class DecoderLM(nn.Module):
                                 #  memory_is_causal=True) # (B, S, D)
         output = self.out_fc(x) # (B, S, V)
         # print(output.shape, labels.shape)
-        labels=labels[:,1:]
-        labels=torch.cat((labels,(4497*torch.ones(labels.shape[0],1).int()).to(config.device)),dim=1)
+        # labels=labels[:,1:]
+        # labels=torch.cat((labels,(4497*torch.ones(labels.shape[0],1).int()).to(config.device)),dim=1)
 
         loss = F.cross_entropy(output.view(-1, self.vocab_size), labels.view(-1), reduction='mean')
         return loss, output
